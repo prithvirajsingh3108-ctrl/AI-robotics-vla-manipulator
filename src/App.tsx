@@ -32,7 +32,8 @@ import {
   Maximize2,
   Lock,
   ArrowRight,
-  Gauge
+  Gauge,
+  AlertTriangle
 } from "lucide-react";
 import {
   SYSTEM_ARCHITECTURE_ASCII,
@@ -459,6 +460,24 @@ export default function App() {
                       <div>Receptor: <span className="text-blue-400 font-semibold uppercase">{planResult.targetReceptor}</span></div>
                     </div>
                   </div>
+
+                  {planResult.error && (
+                    <div className="bg-amber-950/15 border border-amber-500/20 rounded-xl p-4 text-xs font-mono text-amber-200/90 relative overflow-hidden flex items-start gap-3">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                      <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-[10px] uppercase text-amber-400 tracking-wide mb-1 flex items-center gap-1.5">
+                          <span>LOCAL CAPACITIVE COGNITION ACTIVE</span>
+                        </div>
+                        <p className="text-zinc-300 leading-relaxed text-[11px]">
+                          Cloud intelligence network is currently offline or experiencing heavy demand. The 3-DOF Arm has hot-swapped to deep local offline physical trajectory calculations:
+                        </p>
+                        <p className="text-[9px] text-amber-400/85 mt-2.5 overflow-x-auto whitespace-pre-wrap leading-tight bg-zinc-950/50 p-2.5 rounded border border-zinc-900/80">
+                          {planResult.error}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Playback step tracker timeline */}
                   <div className="space-y-2 max-h-[310px] overflow-y-auto pr-1">

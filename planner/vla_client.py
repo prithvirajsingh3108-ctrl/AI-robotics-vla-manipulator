@@ -23,6 +23,8 @@ class VisionLanguageActionPlanner:
             # High-fidelity Simulation fall-back pattern
             fallback_plan = self._simulate_planning_brain(command, detected_objects)
             fallback_plan["mode"] = "fallback_simulation"
+            msg = "Gemini API key is missing. Running in local simulation mode." if not self.client else "Gemini API is currently experiencing high demand/spikes (503 Service Unavailable). Activated automatic 5-minute offline simulation safety cooldown."
+            fallback_plan["error"] = msg
             return fallback_plan
 
         system_instruction = """
@@ -93,7 +95,7 @@ class VisionLanguageActionPlanner:
 
         except Exception as e:
             error_str = str(e)
-            if any(term in error_str.lower() for term in ["quota", "exhausted", "429"]):
+            if any(term in error_str.lower() for term in ["quota", "exhausted", "429", "503", "unavailable", "high demand", "overloaded"]):
                 # Cooldown for 5 minutes
                 VisionLanguageActionPlanner._cooldown_until = time.time() + 300.0
             # Graceful robust log fallback

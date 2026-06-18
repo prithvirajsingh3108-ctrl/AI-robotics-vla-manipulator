@@ -140,7 +140,10 @@ app.post("/api/plan", async (req, res) => {
   if (!ai || Date.now() < geminiCooldownUntil) {
     // Return high quality simulated plan aligned to SQLite defaults
     const simulated = getSimulatedBrainPlan(command);
-    return res.json({ ...simulated, mode: "fallback_simulation" });
+    const msg = !ai 
+      ? "Gemini API Key is missing. Running in local simulation mode." 
+      : "Gemini API is currently experiencing high demand/spikes (503 Service Unavailable). Activated automatic 5-minute offline simulation safety cooldown.";
+    return res.json({ ...simulated, mode: "fallback_simulation", error: msg });
   }
 
   try {
@@ -223,12 +226,17 @@ Output the full JSON plan strictly following the schema.`;
     return res.json({ ...parsedPlan, mode: "cognitive_ai" });
 
   } catch (error: any) {
-    const errorStr = String(error?.message || error || "");
-    const isQuotaError = errorStr.toLowerCase().includes("quota") ||
-                         errorStr.toLowerCase().includes("exhausted") ||
-                         errorStr.toLowerCase().includes("429");
-    if (isQuotaError) {
-      console.warn("Gemini API rate limited or offline. Running local simulator fallback.");
+    const errorStr = String(error?.message || JSON.stringify(error) || error || "");
+    const isTransientOrQuota = errorStr.toLowerCase().includes("quota") ||
+                               errorStr.toLowerCase().includes("exhausted") ||
+                               errorStr.toLowerCase().includes("429") ||
+                               errorStr.toLowerCase().includes("503") ||
+                               errorStr.toLowerCase().includes("unavailable") ||
+                               errorStr.toLowerCase().includes("high demand") ||
+                               errorStr.toLowerCase().includes("spikes in demand") ||
+                               errorStr.toLowerCase().includes("overloaded");
+    if (isTransientOrQuota) {
+      console.warn("Gemini API rate limited or experiencing transient overload. Running automatic local safety simulator fallback.");
       // Cooldown for 5 minutes to bypass further API calls
       geminiCooldownUntil = Date.now() + 5 * 60 * 1000;
     } else {

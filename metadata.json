@@ -1,0 +1,6 @@
+{
+  "name": "AI Robotics Brain",
+  "description": "An autonomous Vision-Language-Action system architecture explorer, joint 3-DoF robot arm simulator, and interactive portfolio developer guide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

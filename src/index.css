@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+@layer utilities {
+  .glow-border {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+  }
+  .glow-green {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+  }
+}

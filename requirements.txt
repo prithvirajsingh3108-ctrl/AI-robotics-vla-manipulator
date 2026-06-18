@@ -1,0 +1,9 @@
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pydantic>=2.6.0
+google-genai>=2.4.0
+opencv-python-headless>=4.9.0.80
+numpy>=1.26.0
+streamlit>=1.31.0
+pandas>=2.2.0
+pytest>=8.0.0
